@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "b70c7b32-e6e8-464e-b075-f5e3ecdbcb79",
+		"name": "Currency Converter API",
+		"description": "The Currency Conversion API allows users to convert an amount from one currency to another using real-time exchange rates. The API integrates with Open Exchange Rates to fetch the latest exchange rates and ensures efficient performance by caching frequent requests with Redis.\n\nIt also maintains a history of recent conversions, storing them in a database, and provides an endpoint to retrieve the last 5 conversions made by the user.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42731567",
+		"_collection_link": "https://red-desert-550321.postman.co/workspace/New-Team-Workspace~a9f90c23-2883-4ba5-8478-9b2d23fbe553/collection/42731567-b70c7b32-e6e8-464e-b075-f5e3ecdbcb79?action=share&source=collection_link&creator=42731567"
+	},
+	"item": [
+		{
+			"name": "/api/currency/convert  - Convert Currency",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 100,\n    \"from\": \"USD\",\n    \"to\": \"EUR\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/currency/convert",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"currency",
+						"convert"
+					]
+				},
+				"description": "- Receives an amount and two currency codes (e.g., USD to EUR).\n    \n- Returns only the **converted amount** and the **exchange rate** used.\n- Uses Open Exchange Rates for real-time conversion rates.\n- Implements Redis caching to reduce external API requests."
+			},
+			"response": []
+		},
+		{
+			"name": "Get /api/currency/histor - Conversion History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/currency/history",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"currency",
+						"history"
+					]
+				},
+				"description": "- Returns the last **5 currency conversions** made by the authenticated user.\n- Provides details such as the original amount, converted amount, exchange rate, and timestamp.\n- Data is stored in a database for quick retrieval."
+			},
+			"response": []
+		}
+	]
+}
