@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 /**
  * Conversion Schema
  * Stores currency conversion records with:
+ * - User ID
  * - Source currency
  * - Target currency
  * - Original amount
@@ -11,6 +12,11 @@ const mongoose = require('mongoose');
  * - Timestamp of conversion
  */
 const conversionSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+    index: true
+  },
   fromCurrency: String,
   toCurrency: String,
   amount: Number,

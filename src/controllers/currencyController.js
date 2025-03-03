@@ -1,13 +1,17 @@
 const currencyService = require('../services/currencyService');
 const Conversion = require('../models/conversion');
+const { getUserId } = require('../utils/userIdManager');
 
 /**
  * Currency conversion controller
  * Handles currency conversion requests and stores the conversion history
+ * Now includes automatic user identification for tracking individual user's conversions
  */
 exports.convertCurrency = async (req, res) => {
   try {
     const { amount, from, to } = req.body;
+    // Get or create unique user identifier from local storage
+    const userId = getUserId();
 
     // Validate required fields
     if (!amount || !from || !to) {
@@ -17,8 +21,9 @@ exports.convertCurrency = async (req, res) => {
     // Get conversion from service
     const conversion = await currencyService.convertCurrency(amount, from, to);
     
-    // Store conversion in database
+    // Store conversion in database with user identification
     await Conversion.create({
+      userId, 
       fromCurrency: from,
       toCurrency: to,
       amount,
@@ -38,11 +43,16 @@ exports.convertCurrency = async (req, res) => {
 
 /**
  * Get conversion history
- * Returns the last 5 currency conversions
+ * Returns the last 5 currency conversions for the specific user
+ * Uses automatic user identification to filter results
  */
 exports.getHistory = async (req, res) => {
   try {
-    const history = await Conversion.find()
+    // Get user's unique identifier
+    const userId = getUserId();
+    
+    // Fetch only conversions associated with this user
+    const history = await Conversion.find({ userId })
       .sort({ timestamp: -1 })
       .limit(5);
     res.json(history);
